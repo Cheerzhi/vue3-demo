@@ -12,3 +12,16 @@ export const analysisParam = (data) => {
     param:data
   })
 }
+
+/**
+ * 加密解析
+ * 
+ */
+
+export const registerAccount = (data) => {
+  return request({
+    url:"/register",
+    method:"post",
+    data
+  })
+}
