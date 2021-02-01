@@ -31,13 +31,13 @@ service.interceptors.response.use(
       return res
     } else {
       Toast.clear()
-      Toast(res.msg)
+      Toast(res.msg||"客观请稍等,忙不过来了")
       return Promise.reject(res || 'Error')
     }
   },
   error => {
     Toast.clear()
-    Toast(error)
+    Toast(error||"请检查你的网络")
     return Promise.reject(error)
   }
 )
