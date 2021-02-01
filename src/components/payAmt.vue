@@ -7,13 +7,14 @@
           class="payAmt-choice-item"
           v-for="item in chargeList"
           :key="item"
-          :class="item===selected||item==otherCharge?'selected':''"
+          :class="item==otherCharge?'selected':''"
+          @click="selectMoney(item)"
         >{{item}}元</div>
       </div>
     </div>
     <div class="payAmt-choice">
       <div class="payAmt-choice-title">其他充值金额</div>
-      <van-field v-model="otherCharge" placeholder="请输入金额" />
+      <van-field :model-value="otherCharge" placeholder="请输入金额" />
     </div>
   </div>
 </template>
@@ -22,16 +23,14 @@
 import { ref } from "vue";
 export default {
   setup() {
-    const selected = ref("");
     const chargeList = ref(["5", "10", "20", "30", "50", "100"]);
     const selectMoney = val => {
-      state.payAmt = val;
+      otherCharge.value = val;
     };
     const otherCharge = ref("");
     return {
       chargeList,
       selectMoney,
-      selected,
       otherCharge
     };
   }

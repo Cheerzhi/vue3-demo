@@ -2,7 +2,7 @@
   <div class="register">
     <van-form @submit="onSubmit" validate-first :show-error="false">
       <van-field
-        v-model="state.name"
+        :model-value="state.name"
         name="学生姓名"
         label="学生姓名"
         placeholder="请输入学生姓名"
@@ -14,7 +14,7 @@
         </template>
       </van-field>
       <van-field
-        v-model="state.stId"
+        :model-value="state.stId"
         name="学工号"
         label="学工号"
         placeholder="请输入学工号"
