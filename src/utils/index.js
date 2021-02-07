@@ -4,7 +4,7 @@ import {
 
 const TokenKey = 'YKBSToken'
 const NameKey = 'YKBSName'
-
+const STidKey = 'YKBSSTID'
 export const getToken = () => {
     return sessionStorage.getItem(TokenKey)
 }
@@ -19,6 +19,13 @@ export const getName = () => {
 
 export const setName = (name) => {
     return sessionStorage.setItem(NameKey, name)
+}
+export const getStId = () => {
+    return sessionStorage.getItem(STidKey)
+}
+
+export const setStId = (stId) => {
+    return sessionStorage.setItem(STidKey, stId)
 }
 export const getType = (obj) => {
     //tostring会返回对应不同的标签的构造函数

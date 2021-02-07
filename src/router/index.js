@@ -1,11 +1,15 @@
 import {
   createRouter,
   createWebHashHistory,
-  useRoute
 } from 'vue-router'
+import store from '../store'
 import {
   getToken
 } from '@/utils/index'
+import {
+  getName,
+  getStId
+} from '../utils'
 const routes = [{
     path: '/',
     redirect: '/home/charge',
@@ -56,12 +60,19 @@ const router = createRouter({
   routes
 })
 router.beforeEach((to, from) => {
-  let route = useRoute()
   document.title = to.meta.title
-  if (!getToken()&&to.name!=="register") {
-    route.replace({
+  if (!getToken() && to.name !== "register") {
+    return {
       name: "register"
-    })
+    }
+  } else {
+    if (!store.state.isLogin) {
+      store.commit("SET_USER", {
+        name: getName(),
+        stId: getStId()
+      })
+    }
+    return true
   }
 })
 export default router

@@ -18,9 +18,9 @@ export const analysisParam = (data) => {
  * 
  */
 
-export const registerAccount = (data) => {
+export const registerUser = (data) => {
   return request({
-    url:"/register",
+    url:"/user/registerUser",
     method:"post",
     data
   })

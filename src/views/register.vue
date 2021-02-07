@@ -8,6 +8,7 @@
         placeholder="请输入学生姓名"
         label-class="label"
         :rules="state.ruleValidate.name"
+        @update:model-value="changeName"
       >
         <template #left-icon>
           <img src="../assets/image/name.png" class="icon" />
@@ -20,6 +21,7 @@
         placeholder="请输入学工号"
         label-class="label"
         :rules="state.ruleValidate.stId"
+        @update:model-value="changeStId"
       >
         <template #left-icon>
           <img src="../assets/image/num.png" class="icon" />
@@ -41,12 +43,11 @@
 
 <script>
 import { reactive, ref, getCurrentInstance, onMounted } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import { registerAccount } from "@/api/login";
+import { useRoute } from "vue-router";
+import { registerUser } from "@/api/login";
 export default {
-  setup(props,{emit}) {
+  setup(props, { emit }) {
     const { ctx } = getCurrentInstance();
-    const router = useRouter();
     const route = useRoute();
     const state = reactive({
       name: "",
@@ -62,30 +63,45 @@ export default {
       }
     });
     const rName = ref("");
+    const changeName = val => {
+      state.name = val;
+    };
+    const changeStId = val => {
+      state.stId = val;
+    };
     const onSubmit = val => {
       state.loading = true;
       let data = {
         stId: state.stId,
-        name: name
+        name: state.name
       };
-      registerAccount(data)
+      registerUser(data)
         .then(res => {
-          router.replace({
-            name: "charge"
-          });
-          state.loading = false;
+          ctx.$store.dispatch("registerUser", res.data).then(
+            res => {
+              ctx.$router.replace({
+                name: "charge"
+              });
+              state.loading = false;
+            },
+            err => {
+              state.loading = false;
+            }
+          );
         })
         .catch(err => {
           state.loading = false;
         });
     };
     onMounted(() => {
-      rName.value = route.query.from;
+      rName.value = route.query || "";    
     });
     return {
       state,
       rName,
-      onSubmit
+      onSubmit,
+      changeStId,
+      changeName
     };
   }
 };
