@@ -81,7 +81,6 @@ createApp(App).use(store).use(router).use(Vant).mount('#app')
 2.0的写法
 
 ```js
-<script>
 export default {
   name: 'home',
   data () {
@@ -93,13 +92,11 @@ export default {
     //
   }
 }
-</script>
 ```
 
 3.0的写法
 
 ```js
-<script>
 import { reactive, ref,computed } from "vue";
 export default {
   setup() {
@@ -130,7 +127,6 @@ export default {
     };
   }
 };
-</script>
 ```
 
 - 通过setup去管理组件内的数据以及方法
@@ -179,6 +175,80 @@ setup(){
 |activated |      |
 |deactivated||
 
-## vue-router的改动(较大)
+## vue-router的改动
+
+### 函数式的写法与新建实例的写法(2.0)
+
+```js
+// 2.0的写法
+  new Router({
+    routes,
+    mode:"history/hash"
+  })
+
+// 3.0的写法
+createRouter({
+  history: createWebHashHistory(),    //hash模式
+  //history:createWebHistory()        //历史模式
+  routes
+})
+```
+router和route使用(this不再指向vue实例的改动)
+```js
+import {useRoute,useRouter} from 'vue-router'
+import {getCurrentInstance} from 'vue'
+
+// 测试环境之中是可以这样的 生产打包后是会报错的
+// const {ctx} = getCurrentInstance()
+// ctx.route
+// ctx.router
+
+//推荐写法
+const route = useRoute()
+const router = useRouter()
+
+```
+
+### 所有路由钩子函数的改动 next的不推荐使用
+```js
+//
+router.beforeEach((to,from,next)=>{
+  // next() //不推荐,但依旧支持
+  // return true 
+  // return false //终止跳转
+  return {name:"login",replace:true} //重定向
+})
+```
+
+### 动态路由的修改
+```js
+// 2.0
+// 通过接口获取对应角色的路由 
+router.addRoutes(asyncRoutes)
+//退出登陆的时候重置路由是通过重置router实例中matcher
+export function resetRouter() {
+  const newRouter = createRouter()
+  router.matcher = newRouter.matcher // reset router
+}
+//3.0
+// 新增删除路由的方法
+removeRoute(name: string | symbol): void
+```
+### 钩子的改动(待补充)
 
 ## vuex的改动(函数式写法的改动)
+```js
+// 2.0
+export default new Vuex.Store({
+  modules,
+  getters,
+  state,
+  mutations,
+  actions
+})
+// 3.0
+import { createStore,useStore } from 'vuex'
+const store = createStore({ ...options })
+const store = useStore()
+```
+
