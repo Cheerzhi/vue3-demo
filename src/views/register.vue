@@ -38,17 +38,27 @@
         >提交</van-button>
       </div>
     </van-form>
+
+    <Child ref="child" @change-name="changeName" :name="state.name"/>
+    <div>
+      <button @click="handleChild">触发子组件事件</button>
+    </div>
   </div>
 </template>
 
 <script>
-import { reactive, ref, getCurrentInstance, onMounted } from "vue";
+import { reactive, ref, getCurrentInstance, onMounted, watch, watchEffect } from "vue";
 import { useRoute } from "vue-router";
 import { registerUser } from "@/api/login";
+import Child from '@/components/child'
 export default {
+  components:{
+    Child
+  },
   setup(props, { emit }) {
     const { ctx } = getCurrentInstance();
     const route = useRoute();
+    const child = ref('')
     const state = reactive({
       name: "",
       stId: "",
@@ -93,6 +103,17 @@ export default {
           state.loading = false;
         });
     };
+    const handleChild = ()=>{
+      child.value.handleName()
+    }
+    watch(()=>state.name,(newval,oldval)=>{
+      console.log(newval)
+      console.log(oldval)
+    })
+    watchEffect(()=>{
+      console.log(state.name);
+      
+    })
     onMounted(() => {
       rName.value = route.query || "";    
     });
@@ -101,7 +122,9 @@ export default {
       rName,
       onSubmit,
       changeStId,
-      changeName
+      changeName,
+      child,
+      handleChild
     };
   }
 };

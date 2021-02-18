@@ -7,7 +7,7 @@ vue3.0及其配套生态的改动:
 + vue3.0的文档 https://www.vue3js.cn/docs/zh/
 + vue-router4.0的文档 https://next.router.vuejs.org/
 + vuex4.0的文档 https://next.vuex.vuejs.org/
-+ vite的文档 https://www.vite.org/zh  (新一代脚手架 尤大用来取代webpack 个人有兴趣可以研究)
++ vite的文档 https://cn.vitejs.dev/guide/  (新一代脚手架 尤大用来取代webpack 个人有兴趣可以研究)
 
 ### 生成一个vue3.0的项目
 
@@ -56,7 +56,34 @@ createApp(App).use(store).use(router).use(Vant).mount('#app')
   <div></div>
 </template>
 ```
-- 事件部分以及v-model这一语法糖的改动(待补充)
+- 事件部分以及v-model这一语法糖的改动
+
+1.事件部分
+```html
+<dialog @beforeClose="doSomething"></dialog>
+<!-- <dialog @beforeclose="doSomething"></dialog> 是没有区别的 -->
+<!-- <dialog @before-close="doSomething"></dialog> 推荐写成这样 -->
+```
+都会换成全小写的状态,所以最好是以小写加上
+```js
+$emit(beforeclose)//也是会成功
+```
+2.v-model的改动
+- 支持多个v-model的写法
+```vue
+<template>
+<parent v-model:first-name="firstName"
+  v-model:last-name="lastName"></parent>
+
+
+<child>
+  <input :value="firstName" @input="$emit('update:firstName',$event.target.value)"/>
+  <input :value="lastName" @input="$emit('update:lastName',$event.target.value)"/>
+
+</child>
+</template>
+```
+- 自定义v-model变量的写法(待补充)
 
 - 模版中的ref的改动
 ```html
@@ -73,6 +100,14 @@ createApp(App).use(store).use(router).use(Vant).mount('#app')
   }
 </script>
 ```
+- teleport 组件
+```js
+<teleport to="#modals">
+  <div>A</div>
+</teleport>
+```
+防止样式的错误 新增一个挂载到对应标签的下面
+多个 <teleport> 组件可以将其内容挂载到同一个目标元素。顺序将是一个简单的追加——稍后挂载将位于目标元素中较早的挂载之后。
 
 ### js部分的改动
 
@@ -156,10 +191,113 @@ setup(){
 }
 ```
 
-#### watch和watchEffect(待补充)
-#### mixin的改动(待补充)
-#### this不再指向vue示例导致的改动(待补充)
-#### 父子通信(待补充)
+#### watch和watchEffect
+```js
+import {watch,watchEffect,ref,reactive} from 'vue'
+setup(){
+  const state = reactive({name:""})
+  const name = ref('')
+  watch(()=>state.name,(newval,oldval)=>{
+  // watch([()=>state.name,name],(newval,oldval)=>{//可以同时监听多个值
+    console.log(newval)
+    console.log(oldval)
+  })
+  watch(name,(newval,oldval)=>{
+    console.log(newval)
+    console.log(oldval)
+  })
+  watchEffect(() => console.log(name))
+}
+```
+- 与react中useEffect一样 称之为副作用 不依赖于数据的改动触发
+- watchEffect会自动收集回调中的响应式属性
+  watch是能够获取旧值和新值的 watchEffect获取不到
+- watchEffect会在初始化组件时触发一次
+
+
+#### mixin的改动
+```js
+// 数据方面的表示
+const Mixin = {
+  user:{
+    name:"123",
+    id:"456"
+  }
+}
+
+const 2.0 = {
+  mixins: [Mixin],
+  user:{
+    name:"2.0"
+  }
+}
+console.log(user)  //{name:"2.0",id:'456'}
+const 3.0 = {
+  mixins: [Mixin],
+  user:{
+    name:"3.0"
+  }
+}
+
+console.log(user)  //{name:"3.0"}
+// 方法则会递归执行(重点)
+```
+#### 父子通信
+父组件
+```vue
+<template>
+  <child :name="name" @my-event="changeName"/>
+</template>
+<script>
+  setup(props){
+    const name = ref('xiaoming')
+    const changeName = (Name) =>{
+      name.value = Name
+    }
+    return {
+      changeName,name
+    }
+  }
+</script>
+```
+子组件
+```vue
+<template>
+  <button @click="handleName"></button>
+</template>
+<script>
+  props:{
+    name:{
+      type:String,
+      default:"zhi"
+    }
+  },
+  setup(props,{emit}){
+    const changeName = () =>{
+      emit('change-name','xiaoming')
+    }
+    return {
+      changeName
+    }
+  }
+</script>
+```
+父组件
+<template>
+  <child @change-name='changeName' :name='name'></child>
+</template>
+<script>
+  setup(props,{emit}){
+    const name = ''
+    const changeName = (Name) =>{
+      name.value = Name
+    }
+    return {
+      changeName,name
+    }
+  }
+</script>
+```
 #### 生命周期
 
 |2.0|3.0|
