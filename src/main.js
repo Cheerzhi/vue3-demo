@@ -5,4 +5,6 @@ import store from './store'
 import Vant from 'vant'
 import './assets/css/reset.css'
 import 'vant/lib/index.less';
+const { mockXHR } = require('../mock')
+mockXHR()
 createApp(App).use(store).use(router).use(Vant).mount('#app')

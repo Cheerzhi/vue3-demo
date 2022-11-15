@@ -42,7 +42,7 @@ createApp(App).use(store).use(router).use(Vant).mount('#app')
 
 ### Object.defineProperty与Object.proxy
 
-众所周知,vue2.0是采用Object.defineProperty,而改版后的vue3.0采用的是Object.proxy(es7的语法)进行数据绑定的;
+众所周知,vue2.0是采用Object.defineProperty,而改版后的vue3.0采用的是Object.proxy(es6的语法)进行数据绑定的;
 这一个改动影响的是ie这一部分的用户,所以如果碰到ie的用户vue会自动降版本使用Object.defineProperty来进行数据绑定;
 
 
@@ -68,7 +68,8 @@ createApp(App).use(store).use(router).use(Vant).mount('#app')
 ```js
 $emit(beforeclose)//也是会成功
 ```
-2.v-model的改动
+
+2.v-model的改动(非兼容2.0的写法)
 - 支持多个v-model的写法
 ```vue
 <template>
@@ -83,7 +84,8 @@ $emit(beforeclose)//也是会成功
 </child>
 </template>
 ```
-- 自定义v-model变量的写法(待补充)
+3.0中 自定义组件上的 v-model 相当于传递了 modelValue prop 并接收抛出的 update:modelValue 事件
+
 
 - 模版中的ref的改动
 ```html
@@ -100,6 +102,7 @@ $emit(beforeclose)//也是会成功
   }
 </script>
 ```
+
 - teleport 组件
 ```js
 <teleport to="#modals">
@@ -109,9 +112,34 @@ $emit(beforeclose)//也是会成功
 防止样式的错误 新增一个挂载到对应标签的下面
 多个 <teleport> 组件可以将其内容挂载到同一个目标元素。顺序将是一个简单的追加——稍后挂载将位于目标元素中较早的挂载之后。
 
-### js部分的改动
+- Suspense组件 (待补充)
 
+### 非兼容性的写法
+
+https://www.vue3js.cn/docs/zh/guide/migration/introduction.html
+
+1. v-model的写法
+2. 渲染函数必须进行引入才能使用
+
+```js
+import {h} from 'vue'
+export default{
+  render(){
+    return h('div')
+  }
+}
+```
+
+3. mixin的改变
+4. 按键修饰符的改变
+```html
+<!-- <input @keyup.13="handleSubmit" /> 不再支持 -->
+<input @keyup.enter="handleSubmit" />
+```
+5. v-for中不再产生ref数组
 #### 移除data、methods、过滤器filter
+
+6. $on，$off 和 $once 实例方法已被移除，应用实例不再实现事件触发接口。
 
 2.0的写法
 
@@ -242,6 +270,7 @@ const 3.0 = {
 console.log(user)  //{name:"3.0"}
 // 方法则会递归执行(重点)
 ```
+
 #### 父子通信
 父组件
 ```vue
@@ -263,7 +292,7 @@ console.log(user)  //{name:"3.0"}
 子组件
 ```vue
 <template>
-  <button @click="handleName"></button>
+  <button @click="changeName"></button>
 </template>
 <script>
   props:{
@@ -283,6 +312,7 @@ console.log(user)  //{name:"3.0"}
 </script>
 ```
 父组件
+```vue
 <template>
   <child @change-name='changeName' :name='name'></child>
 </template>
@@ -390,3 +420,6 @@ const store = createStore({ ...options })
 const store = useStore()
 ```
 
+## typeScript的支持 
+
+https://www.vue3js.cn/docs/zh/guide/typescript-support.html#%E9%A1%B9%E7%9B%AE%E5%88%9B%E5%BB%BA
