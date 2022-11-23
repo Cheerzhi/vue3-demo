@@ -1,6 +1,8 @@
 const Mock = require('mockjs')
 const { param2Obj } = require('./utils')
-
+Mock.setup({
+  timeout: '1000'
+})
 const user = require('./user')
 
 const mocks = [

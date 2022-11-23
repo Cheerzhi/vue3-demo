@@ -1,3 +1,25 @@
+const jwt = require('jsonwebtoken')
+
+function initToken(user) {
+  let sercet = 'cheerzhi'
+  let token = jwt.sign(user, sercet, {
+    'expiresIn': 60 * 10
+  })
+  return token
+}
+
+function verifyToken(token) {
+  let sercet = 'cheerzhi'
+  jwt.verify(token, sercet, (error, result) => {
+    if (error) {
+      console.log(error);
+      return error
+    } else {
+      console.log(result);
+      return result
+    }
+  })
+}
 /**
  * @param {string} url
  * @returns {Object}
@@ -19,6 +41,10 @@ function param2Obj(url) {
   })
   return obj
 }
-module.exports ={
-  param2Obj
+
+
+module.exports = {
+  param2Obj,
+  initToken,
+  verifyToken
 }

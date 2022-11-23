@@ -27,7 +27,7 @@ service.interceptors.response.use(
     if (response.config.responseType == 'blob') {
       return res
     }
-    if (res.status == "0" || res.code == 200 || res.status == 200) {
+    if (res.code == 200) {
       return res
     } else {
       Toast.clear()

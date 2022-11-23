@@ -1,10 +1,12 @@
-
+const {
+  initToken
+} = require('./utils')
 const tokens = {
   admin: {
     token: 'admin-token'
   },
-  editor: {
-    token: 'editor-token'
+  visitor: {
+    token: 'visitor-token'
   }
 }
 
@@ -12,37 +14,43 @@ const users = {
   'admin-token': {
     roles: ['admin'],
     introduction: 'I am a super administrator',
-    avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
-    name: 'Super Admin'
+    name: '管理员'
   },
-  'editor-token': {
-    roles: ['editor'],
-    introduction: 'I am an editor',
-    avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
-    name: 'Normal Editor'
+  'visitor-token': {
+    roles: ['visitor'],
+    introduction: 'I am an visitor',
+    name: '访客'
   }
 }
 
 module.exports = [
   // user login
   {
-    url: '/vue-element-admin/user/login',
+    url: '/login',
     type: 'post',
     response: config => {
-      const { username } = config.body
-      const token = tokens[username]
-
-      // mock error
-      if (!token) {
+      const {
+        username,
+        password
+      } = config.body
+      const {
+        token
+      } = tokens[password]
+      //校验用户类型
+      if (username !== users[token].name) {
         return {
-          code: 60204,
-          message: 'Account and password are incorrect.'
+          code: 500,
+          msg: "非法登陆"
         }
       }
-
       return {
-        code: 20000,
-        data: token
+        code: 200,
+        data: {
+          token: initToken(tokens[password]),
+          msg: "登陆成功",
+          user: users[token],
+          userType:password
+        }
       }
     }
   },
@@ -52,7 +60,9 @@ module.exports = [
     url: '/vue-element-admin/user/info\.*',
     type: 'get',
     response: config => {
-      const { token } = config.query
+      const {
+        token
+      } = config.query
       const info = users[token]
 
       // mock error

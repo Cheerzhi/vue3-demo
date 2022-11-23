@@ -1,7 +1,7 @@
 const path = require('path');
 module.exports = ({ file }) => {
   const designWidth = file.dirname.includes('vant')?375:750;
-//   const designWidth = 375
+  // const designWidth = 750
   return {
       plugins: {
           // ...

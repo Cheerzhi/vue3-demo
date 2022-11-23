@@ -1,65 +1,59 @@
 import {
-  createStore
-} from 'vuex'
+  defineStore
+} from "pinia";
 import {
-  setToken,
-  setName,
-  setStId
-} from '../utils'
+  ref,
+  computed
+} from "vue";
+import {
+  toLogin
+} from '@/api/login'
+import {
+  setToken
+} from "@/utils"
+//vue2 option方式的写法
+// export const useStore = defineStore('user', {
+//   state: () => ({
+//     user: ""
+//   }),
+//   getters:{
+//     GET_USER:state=>state.user
+//   },
+//   actions:{
+//     async SET_USER(){
 
-export default createStore({
-  state: {
-    user: null,
-    isLogin: false,
-    record: []
-  },
-  getters: {
-    user: state => state.user,
-    record: state => state.record,
-    isLogin:state =>state.isLogin
-  },
-  mutations: {
-    SET_USER: (state, user) => {
-      state.user = user
-      state.isLogin = true
-    },
-    SET_RECORD: (state, record) => {
-      const {
-        list,
-        type
-      } = record
-      state.record = type ? [...state.record, list] : []
+//     }
+//   }
+// })
+
+
+//vue3 组合式写法
+export const useUserStore = defineStore('user', () => {
+  const userName = ref('')
+  const userType = ref('')
+  const generateUserType = computed(() => {
+    let typeObj = {
+      admin: "管理员",
+      visitor: "访客"
     }
-  },
-  actions: {
-    registerUser({
-      commit
-    }, user) {
-      return new Promise((resolve, reject) => {
-        try {
-          const {name,token,stId} = user
-          commit("SET_USER", user)
-          if(token){
-            setToken(token)
-          }
-          setStId(stId)
-          setName(name)
-          resolve(user)
-        } catch (err) {
-          reject(err)
-        }
+    return typeObj[userType.value] || '未登陆'
+  })
+
+  function SET_USER(user) {
+    return new Promise((resolve, reject) => {
+      toLogin(user).then(res => {
+        userName.value = res.data.user.name
+        userType.value = res.data.userType
+        resolve()
+      }).catch(err => {
+        reject()
       })
-    },
-    initRecord({
-      commit
-    }, list) {
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          // const {record,type} = list 
-          commit("SET_RECORD", list)
-          resolve(list)
-        }, 300)
-      })
-    }
+    })
+  }
+  return {
+    userName,
+    userType,
+    generateUserType,
+    SET_USER
   }
 })
