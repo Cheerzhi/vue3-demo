@@ -6,7 +6,7 @@ import {
   computed
 } from "vue";
 import {
-  toLogin
+  toLogin,toLogout
 } from '@/api/login'
 import {
   setToken
@@ -50,10 +50,22 @@ export const useUserStore = defineStore('user', () => {
       })
     })
   }
+  function LOG_OUT(){
+    return new Promise((resolve,reject)=>{
+      toLogout().then(res=>{
+        userName.value = ''
+        userType.value = ''
+        resolve()
+      },err=>{
+        reject(err)
+      })
+    })
+  }
   return {
     userName,
     userType,
     generateUserType,
-    SET_USER
+    SET_USER,
+    LOG_OUT
   }
 })

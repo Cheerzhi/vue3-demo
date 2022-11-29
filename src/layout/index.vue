@@ -1,7 +1,7 @@
 <template>
   <div class="layout">
-    <div class="layout-banner">
-      <div class="layout-banner-return" v-if="!hidden">返回</div>
+    <div class="layout-banner" >
+      <div class="layout-banner-return" v-if="!hidden" @click="back">返回</div>
       <div class="layout-banner-title" v-if="!hidden">{{title}}</div>
     </div>
     <div class="layout-container">
@@ -13,6 +13,7 @@
 <script setup>
 
 import { defineProps } from "vue";
+import { useRouter } from "vue-router";
 defineProps({
   title: {
     type: String,
@@ -22,6 +23,10 @@ defineProps({
     default:false,
   }
 });
+const router = useRouter()
+const back = () =>{
+  router.back()
+}
 </script>
 
 <style lang="less">
@@ -62,6 +67,8 @@ defineProps({
       top:30px;
       left:50px;
       font-size:28px;
+      color:#fff;
+      z-index:1;
       &::before,&::after{
         content:' ';
         position: absolute;
@@ -82,7 +89,9 @@ defineProps({
       font-size:32px;
       top:28px;
       left:50%;
-      transform:translate(-50%,0)
+      transform:translate(-50%,0);
+      color:#fff;
+      z-index:1;
     }
 
   }

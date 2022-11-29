@@ -57,8 +57,8 @@ module.exports = [
 
   // get user info
   {
-    url: '/vue-element-admin/user/info\.*',
-    type: 'get',
+    url: '/logout',
+    type: 'post',
     response: config => {
       const {
         token
@@ -68,27 +68,16 @@ module.exports = [
       // mock error
       if (!info) {
         return {
-          code: 50008,
-          message: 'Login failed, unable to get user details.'
+          code: 500,
+          message: '非法操作'
         }
       }
 
       return {
-        code: 20000,
-        data: info
+        code: 200,
+        msg:"已成功退出"
       }
     }
   },
 
-  // user logout
-  {
-    url: '/vue-element-admin/user/logout',
-    type: 'post',
-    response: _ => {
-      return {
-        code: 20000,
-        data: 'success'
-      }
-    }
-  }
 ]

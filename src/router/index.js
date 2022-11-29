@@ -2,7 +2,6 @@ import {
   createRouter,
   createWebHashHistory,
 } from 'vue-router'
-import store from '../store'
 import {
   getToken
 } from '@/utils/index'
@@ -22,6 +21,35 @@ const routes = [{
       title: "登陆"
     },
   },
+  {
+    path: '/home',
+    name: 'home',
+    component: () => import('@/views/home.vue'),
+    meta: {
+      title: '主页'
+    },
+  }, {
+    path: '/detail',
+    name: 'detail',
+    component: () => import('@/views/detail.vue'),
+    meta: {
+      title: '访问申请详情'
+    },
+  }, {
+    path: '/list',
+    name: 'list',
+    component: () => import('@/views/list.vue'),
+    meta: {
+      title: '访问申请列表'
+    },
+  }, {
+    path: '/code',
+    name: 'code',
+    component: () => import('@/views/code.vue'),
+    meta: {
+      title: '二维码'
+    },
+  }
 ]
 
 const router = createRouter({

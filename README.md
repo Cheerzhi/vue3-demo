@@ -419,7 +419,3 @@ import { createStore,useStore } from 'vuex'
 const store = createStore({ ...options })
 const store = useStore()
 ```
-
-## typeScript的支持 
-
-https://www.vue3js.cn/docs/zh/guide/typescript-support.html#%E9%A1%B9%E7%9B%AE%E5%88%9B%E5%BB%BA

@@ -7,3 +7,11 @@ export const toLogin = (data) => {
     data
   })
 }
+
+export const toLogout = (data) => {
+  return request({
+    url:"/logout",
+    method:"post",
+    data
+  })
+}

@@ -21,10 +21,12 @@
 <script setup>
 import { ref } from 'vue';
 import {Toast} from 'vant'
+import {useRouter} from 'vue-router';
 import {useUserStore} from '@/store'
 const username = ref('')
 const password = ref('')
 const store = useUserStore()
+const router = useRouter()
 const rules = {
   username:[{required:true,message:'请选择用户类型'}],
   password:[{required:true,message:"请输入密码"}],
@@ -40,13 +42,13 @@ const show = ref(false)
 const loading = ref(false)
 const onSubmit = (val)=>{
   loading.value = true
-  store.SET_USER(val).finally(()=>{
+  store.SET_USER(val).then(res=>{
+    router.replace({name:"home"})
+  }).finally(()=>{
     loading.value = false
   })
 }
 const onFailed = ({errors}) =>{
-  console.log(errors);
-  
   Toast.fail({message:errors[0].message})
 }
 const onConfirm = ({value,text}) =>{
