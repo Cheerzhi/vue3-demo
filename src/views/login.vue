@@ -1,6 +1,6 @@
 <template>
-  <Layout hidden>
-    <div class="login">
+  <Layout hidden ref="loginDiv">
+    <div class="login" >
       <div class="login-title">出入管理系统</div>
       <van-form @submit="onSubmit" @failed="onFailed">
         <van-cell-group inset>
@@ -19,12 +19,13 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref,onMounted } from 'vue';
 import {Toast} from 'vant'
 import {useRouter} from 'vue-router';
 import {useUserStore} from '@/store'
 const username = ref('')
 const password = ref('')
+const loginDiv = ref(null)
 const store = useUserStore()
 const router = useRouter()
 const rules = {
@@ -56,6 +57,9 @@ const onConfirm = ({value,text}) =>{
   username.value = text
   show.value = false
 }
+onMounted(()=>{
+  console.log(loginDiv.value)
+})
 </script>
 
 <style lang="less" scoped>
