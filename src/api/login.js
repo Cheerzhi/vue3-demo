@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-
+import {getToken} from '@/utils'
 export const toLogin = (data) => {
   return request({
     url:"/login",
@@ -10,7 +10,7 @@ export const toLogin = (data) => {
 
 export const toLogout = (data) => {
   return request({
-    url:"/logout",
+    url:`/logout?token=${getToken()}`,
     method:"post",
     data
   })

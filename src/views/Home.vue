@@ -10,7 +10,7 @@
     </div>
   </div>
   <div class="banner">
-    <img src="../assets/image/banner.png" /> 
+
   </div>
   <div class="icon-list">
     <div v-for="item in routeList" :key="item.name" class="icon-item" @click="toPage(item.name)">
@@ -80,10 +80,9 @@ export default defineComponent({
   }
 }
 .banner {
-  padding:0 30px;
-  img {
-    height:200px;
-  }
+  margin:0 30px;
+  height:200px;
+  background:radial-gradient(circle ,cyan,#3275FA)
 }
 .icon{
   &-item{

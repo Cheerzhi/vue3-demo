@@ -44,6 +44,7 @@ export const useUserStore = defineStore('user', () => {
       toLogin(user).then(res => {
         userName.value = res.data.user.name
         userType.value = res.data.userType
+        setToken(res.data.token)
         resolve()
       }).catch(err => {
         reject()

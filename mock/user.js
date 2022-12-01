@@ -1,5 +1,6 @@
 const {
-  initToken
+  initToken,
+  verifyToken
 } = require('./utils')
 const tokens = {
   admin: {
@@ -49,7 +50,7 @@ module.exports = [
           token: initToken(tokens[password]),
           msg: "登陆成功",
           user: users[token],
-          userType:password
+          userType: password
         }
       }
     }
@@ -63,19 +64,16 @@ module.exports = [
       const {
         token
       } = config.query
-      const info = users[token]
-
-      // mock error
-      if (!info) {
+      let verifyResult = verifyToken(token)
+      if (verifyResult.boolean) {
         return {
-          code: 500,
-          message: '非法操作'
+          code: 200,
+          msg: "已成功退出"
         }
       }
-
       return {
-        code: 200,
-        msg:"已成功退出"
+        code: 500,
+        message: '非法操作'
       }
     }
   },

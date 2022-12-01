@@ -10,13 +10,11 @@ function initToken(user) {
 
 function verifyToken(token) {
   let sercet = 'cheerzhi'
-  jwt.verify(token, sercet, (error, result) => {
+  return  jwt.verify(token, sercet, (error, result) => {
     if (error) {
-      console.log(error);
-      return error
+      return false
     } else {
-      console.log(result);
-      return result
+      return true
     }
   })
 }
