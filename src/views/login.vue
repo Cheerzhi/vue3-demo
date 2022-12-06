@@ -58,7 +58,7 @@ const onConfirm = ({value,text}) =>{
   show.value = false
 }
 onMounted(()=>{
-  console.log(loginDiv.value)
+  console.log(loginDiv.value.handleLoad())
 })
 </script>
 

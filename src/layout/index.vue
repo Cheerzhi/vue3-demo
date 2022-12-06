@@ -12,7 +12,7 @@
 
 <script setup>
 
-import { defineProps } from "vue";
+import { defineProps,defineExpose } from "vue";
 import { useRouter } from "vue-router";
 defineProps({
   title: {
@@ -23,10 +23,17 @@ defineProps({
     default:false,
   }
 });
+const handleLoad = ()=>{
+  console.log('调用子组件方法');
+  
+}
 const router = useRouter()
 const back = () =>{
   router.back()
 }
+defineExpose({
+  handleLoad
+})
 </script>
 
 <style lang="less">
